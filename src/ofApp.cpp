@@ -6,6 +6,7 @@ void ofApp::setup(){
 
 	updateLayout();
 
+	ofxBaseGui::loadFont("Roboto-Regular.ttf", 20);
 	//set_block.addListener(this,);
 	//generate_block.addListener(this,);
 	max_r.addListener(this, &ofApp::maxSizeChanged);
