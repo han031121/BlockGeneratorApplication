@@ -23,15 +23,31 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		void updateUI();
+		void updateLayout();
+		void initalizeUiValue();
+
+		void maxSizeChanged(int & v);
+		void maxBlockCountChanged(int & v);
+		void minBlockCountChanged(int & v);
 
 		std::unique_ptr<blockData> block_data;
 		std::unique_ptr<drawObject> draw_object;
 
-		ofRectangle gui_rect;
-		ofRectangle draw_rect;
+		ofRectangle rect_gui;
+		ofRectangle rect_draw;
 		float gui_width = 500.0f;
 		float margin = 10.0f;
 
-		ofxPanel gui;
+		ofParameter<int> block_count_1 = 4, block_count_2 = 8, max_r = 3, max_c = 3, max_h = 3;
+		ofParameter<float> density;
+		ofParameter<bool> allow_duplication = false;
+		ofParameter<glm::vec2> cam_degree;
+		ofParameter<glm::vec2> light_degree;
+		ofParameter<float> cam_dist, thickness;
+		ofParameter<ofColor> draw_color;
+
+		ofxPanel gui_block;
+		ofxPanel gui_draw;
+		ofxButton set_block;
+		ofxButton generate_block;
 };
