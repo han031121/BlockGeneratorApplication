@@ -33,8 +33,8 @@ void ofApp::initializeUiValue() {
 	cam_degree_xz.set(25);
 	cam_degree_y.set(20);
 	light_degree_xz.set(25);
-	light_degree_y.set(20);
-	thickness.set(2);
+	light_degree_y.set(38);
+	thickness.set(5);
 	draw_color.set(ofColor(220, 185, 154));
 }
 
@@ -84,7 +84,7 @@ void ofApp::guiDrawSetup() {
 
 	draw_settings.add(cam_degree);
 	draw_settings.add(light_degree);
-	draw_settings.add(thickness.set("Line thickness", 2, 0, 10));
+	draw_settings.add(thickness.set("Line thickness", 5, 0, 10));
 	draw_settings.add(magnification.set("Magnification", 1, 0.1, 5));
 	draw_functions.add(save_image.set("Save image"));
 	draw_functions.add(reset.set("Reset settings"));
