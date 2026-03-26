@@ -21,8 +21,9 @@ void ofApp::updateLayout() {
 	float w = ofGetWidth();
 	float h = ofGetHeight();
 
-	rect_gui.set(margin, margin, gui_width, h - 2 * margin);
-	rect_draw.set(gui_width + 2 * margin, margin, w - gui_width - 3 * margin, h - 2 * margin);
+	rect_block_gui.set(margin, margin, gui_width, h - 2 * margin);
+	rect_draw_gui.set(gui_width + 2 * margin, margin, gui_width, h - 2 * margin);
+	rect_image.set(gui_width * 2 + 3 * margin, margin, w - 2 * gui_width - 4 * margin, h - 2 * margin);
 
 
 }
@@ -37,7 +38,7 @@ void ofApp::initalizeUiValue() {
 
 //--------------------------------------------------------------
 void ofApp::guiBlockSetup() {
-	block_settings.setName("Block settings");
+	block_settings.setName("Block Settings");
 	block_generation.setName("Block Generation");
 
 	//set_block.addListener(this,);
@@ -58,7 +59,7 @@ void ofApp::guiBlockSetup() {
 	block_generation.add(set_block.set("Set block"));
 	block_generation.add(generate_block.set("Generate block"));
 
-	gui_block.setup("Block", ofxPanelDefaultFilename, margin, margin);
+	gui_block.setup("BLOCK MENU", "block_settings.xml", rect_block_gui.x, rect_block_gui.y);
 	gui_block.setWidthElements(gui_width);
 	gui_block.setDefaultHeight(40);
 	gui_block.add(block_settings);
@@ -67,7 +68,23 @@ void ofApp::guiBlockSetup() {
 
 //--------------------------------------------------------------
 void ofApp::guiDrawSetup() {
+	draw_settings.setName("Draw Settings");
+	draw_functions.setName("Draw Functions");
 
+	draw_settings.add(cam_degree.set("Cam degree", { 25, 20 }, { 0, 0 }, { 359, 359 }));
+	draw_settings.add(light_degree.set("Light degree", { 25, 38 }, { 0, 0 }, { 359, 359 }));
+	draw_settings.add(thickness.set("Line thickness", 2, 0, 10));
+	draw_settings.add(cam_dist.set("Cam distance", 2000, 1000, 4000));
+	draw_functions.add(save_image.set("Save image"));
+	draw_functions.add(reset.set("Reset settings"));
+	draw_functions.add(calculate_cam_dist.set("Set cam dist"));
+
+	gui_draw.setup("DRAW MENU", "draw_settings.xml", rect_draw_gui.x, rect_draw_gui.y);
+	gui_draw.setWidthElements(gui_width);
+	gui_draw.setDefaultHeight(40);
+	gui_draw.add(draw_settings);
+	gui_draw.add(draw_color.set("Draw color", ofColor(220, 185, 154)));
+	gui_draw.add(draw_functions);
 }
 
 //--------------------------------------------------------------
@@ -105,20 +122,21 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofSetColor(50);
-	ofDrawRectangle(rect_gui);
+	ofDrawRectangle(rect_block_gui);
+	ofDrawRectangle(rect_draw_gui);
 	ofSetColor(220);
-	ofDrawRectangle(rect_draw);
+	ofDrawRectangle(rect_image);
 
 	if (draw_object) {
-		float size = std::min(rect_draw.getWidth(), rect_draw.getHeight());
-		float x = (2 * rect_draw.x + rect_draw.getWidth() - size) / 2;
-		float y = (2 * rect_draw.y + rect_draw.getHeight() - size) / 2;
+		float size = std::min(rect_image.getWidth(), rect_image.getHeight());
+		float x = (2 * rect_image.x + rect_image.getWidth() - size) / 2;
+		float y = (2 * rect_image.y + rect_image.getHeight() - size) / 2;
 		ofSetColor(255);
 		draw_object->drawFbo(x, y, size, size);
 	}
 
 	gui_block.draw();
-	//gui_draw.draw();
+	gui_draw.draw();
 }
 
 //--------------------------------------------------------------

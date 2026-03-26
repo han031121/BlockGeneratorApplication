@@ -35,21 +35,27 @@ class ofApp : public ofBaseApp{
 		std::unique_ptr<blockData> block_data;
 		std::unique_ptr<drawObject> draw_object;
 
-		ofRectangle rect_gui;
-		ofRectangle rect_draw;
-		float gui_width = 500.0f;
+		ofRectangle rect_draw_gui;
+		ofRectangle rect_block_gui;
+		ofRectangle rect_image;
+		float gui_width = 400.0f;
 		float margin = 10.0f;
 
 		ofParameter<int> block_count_1 = 4, block_count_2 = 8, max_r = 3, max_c = 3, max_h = 3;
 		ofParameter<float> density;
 		ofParameter<bool> allow_duplication = false;
+		ofParameter<void> set_block, generate_block;
 		ofParameter<glm::vec2> cam_degree;
 		ofParameter<glm::vec2> light_degree;
 		ofParameter<float> cam_dist, thickness;
 		ofParameter<ofColor> draw_color;
+		ofParameter<void> save_image, reset, calculate_cam_dist;
+
+		ofParameterGroup block_settings;
+		ofParameterGroup block_generation;
+		ofParameterGroup draw_settings;
+		ofParameterGroup draw_functions;
 
 		ofxPanel gui_block;
 		ofxPanel gui_draw;
-		ofxButton set_block;
-		ofxButton generate_block;
 };
