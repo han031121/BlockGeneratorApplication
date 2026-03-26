@@ -33,21 +33,25 @@ class ofApp : public ofBaseApp{
 		void maxSizeChanged(int & v);
 		void maxBlockCountChanged(int & v);
 		void minBlockCountChanged(int & v);
+		void setBlockClicked();
+		void generateBlockClicked();
 		void drawResetClicked();
 
 		std::unique_ptr<blockData> block_data;
 		std::unique_ptr<drawObject> draw_object;
+		float gui_width = 400.0f;
+		float margin = 10.0f;
+		int image_size = 1000;
 
 		ofRectangle rect_draw_gui;
 		ofRectangle rect_block_gui;
 		ofRectangle rect_image;
-		float gui_width = 400.0f;
-		float margin = 10.0f;
 
 		ofParameter<int> block_count_1 = 4, block_count_2 = 8, max_r = 3, max_c = 3, max_h = 3;
 		ofParameter<float> density;
 		ofParameter<bool> allow_duplication = false;
 		ofParameter<void> set_block, generate_block;
+
 		ofParameter<float> cam_degree_xz, cam_degree_y;
 		ofParameter<float> light_degree_xz, light_degree_y;
 		ofParameter<float> magnification;

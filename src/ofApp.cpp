@@ -13,7 +13,7 @@ void ofApp::setup(){
 
 	block_data = std::make_unique<blockData>(block_count_1, block_count_2, max_r, max_c, max_h);
 	block_data->generateBlock();
-	draw_object = std::make_unique<drawObject>(block_data.get(), 1000, 1000);
+	draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
 }
 
 //--------------------------------------------------------------
@@ -43,8 +43,8 @@ void ofApp::guiBlockSetup() {
 	block_settings.setName("Block Settings");
 	block_generation.setName("Block Generation");
 
-	//set_block.addListener(this,);
-	//generate_block.addListener(this,);
+	set_block.addListener(this, &ofApp::setBlockClicked);
+	generate_block.addListener(this, &ofApp::generateBlockClicked);
 	max_r.addListener(this, &ofApp::maxSizeChanged);
 	max_c.addListener(this, &ofApp::maxSizeChanged);
 	max_h.addListener(this, &ofApp::maxSizeChanged);
@@ -130,6 +130,27 @@ void ofApp::maxBlockCountChanged(int & v) {
 void ofApp::minBlockCountChanged(int & v) {
 	if (v > block_count_2)
 		block_count_2 = v;
+}
+
+//--------------------------------------------------------------
+void ofApp::setBlockClicked() {
+	if (block_data)
+		block_data.reset();
+	if (draw_object)
+		draw_object.reset();
+
+	block_data = std::make_unique<blockData>(block_count_1.get(), block_count_2.get(), max_r.get(), max_c.get(), max_h.get(), density.get(), allow_duplication.get());
+
+}
+
+//--------------------------------------------------------------
+void ofApp::generateBlockClicked() {
+	if (!block_data)
+		return;
+	if (draw_object)
+		draw_object.reset();
+	block_data->generateBlock();
+	draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
 }
 
 //--------------------------------------------------------------
