@@ -29,6 +29,8 @@ class ofApp : public ofBaseApp{
 		void guiDrawSetup();
 
 		void drawObjectUpdate();
+		void blockSettingUpdate();
+		void blockCurrentInfoUpdate();
 
 		void maxSizeChanged(int & v);
 		void maxBlockCountChanged(int & v);
@@ -41,6 +43,7 @@ class ofApp : public ofBaseApp{
 		std::unique_ptr<blockData> block_data;
 		std::unique_ptr<drawObject> draw_object;
 		float gui_width = 400.0f;
+		float gui_height = 40.0f;
 		float margin = 10.0f;
 		int image_size = 1000;
 
@@ -51,6 +54,8 @@ class ofApp : public ofBaseApp{
 		ofParameter<int> block_count_1 = 4, block_count_2 = 8, max_r = 3, max_c = 3, max_h = 3;
 		ofParameter<float> density;
 		ofParameter<bool> allow_duplication = false;
+		ofxLabel block_count_setting, max_size_setting, density_setting, allow_duplication_setting;
+		ofxLabel block_count_current, size_current;
 		ofParameter<void> set_block, generate_block;
 
 		ofParameter<float> cam_degree_xz, cam_degree_y;
@@ -61,6 +66,8 @@ class ofApp : public ofBaseApp{
 		ofParameter<void> save_image, reset;
 
 		ofParameterGroup block_settings;
+		ofxGuiGroup block_current_settings;
+		ofxGuiGroup block_current_info;
 		ofParameterGroup block_generation;
 		ofParameterGroup draw_settings;
 		ofParameterGroup cam_degree;

@@ -8,12 +8,16 @@ void ofApp::setup(){
 
 	ofxBaseGui::loadFont("Roboto-Regular.ttf", 20);
 
+	ofxGuiSetDefaultHeight(gui_height);
 	guiBlockSetup();
 	guiDrawSetup();
 
 	block_data = std::make_unique<blockData>(block_count_1, block_count_2, max_r, max_c, max_h);
 	block_data->generateBlock();
 	draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
+
+	blockSettingUpdate();
+	blockCurrentInfoUpdate();
 }
 
 //--------------------------------------------------------------
@@ -24,8 +28,6 @@ void ofApp::updateLayout() {
 	rect_block_gui.set(margin, margin, gui_width, h - 2 * margin);
 	rect_draw_gui.set(gui_width + 2 * margin, margin, gui_width, h - 2 * margin);
 	rect_image.set(gui_width * 2 + 3 * margin, margin, w - 2 * gui_width - 4 * margin, h - 2 * margin);
-
-
 }
 
 //--------------------------------------------------------------
@@ -42,6 +44,8 @@ void ofApp::initializeUiValue() {
 //--------------------------------------------------------------
 void ofApp::guiBlockSetup() {
 	block_settings.setName("Block Settings");
+	block_current_settings.setName("Current Settings");
+	block_current_info.setName("Current block info");
 	block_generation.setName("Block Generation");
 
 	set_block.addListener(this, &ofApp::setBlockClicked);
@@ -59,13 +63,20 @@ void ofApp::guiBlockSetup() {
 	block_settings.add(max_h.set("Max height", 3, 1, 10));
 	block_settings.add(density.set("Density", 20, 0, 100));
 	block_settings.add(allow_duplication.set("Allow duplication", false));
+	block_current_settings.add(block_count_setting.setup("Block count", ""));
+	block_current_settings.add(max_size_setting.setup("Max size", ""));
+	block_current_settings.add(density_setting.setup("Density", ""));
+	block_current_settings.add(allow_duplication_setting.setup("Duplication", ""));
+	block_current_info.add(block_count_current.setup("Block count", ""));
+	block_current_info.add(size_current.setup("Size", ""));
 	block_generation.add(set_block.set("Set block (N)"));
 	block_generation.add(generate_block.set("Generate block (G)"));
 
 	gui_block.setup("BLOCK MENU", "block_settings.xml", rect_block_gui.x, rect_block_gui.y);
 	gui_block.setWidthElements(gui_width);
-	gui_block.setDefaultHeight(40);
 	gui_block.add(block_settings);
+	gui_block.add(&block_current_settings);
+	gui_block.add(&block_current_info);
 	gui_block.add(block_generation);
 }
 
@@ -109,6 +120,25 @@ void ofApp::drawObjectUpdate() {
 }
 
 //--------------------------------------------------------------
+void ofApp::blockSettingUpdate() {
+	block_count_setting = ofToString(block_count_1) + "~" + ofToString(block_count_2);
+	max_size_setting = ofToString(max_r) + "x" + ofToString(max_c) + "x" + ofToString(max_h);
+	density_setting = ofToString(density);
+	if (allow_duplication)
+		allow_duplication_setting = "Allowed";
+	else
+		allow_duplication_setting = "Not allowed";
+}
+
+//--------------------------------------------------------------
+void ofApp::blockCurrentInfoUpdate() {
+	if (!block_data)
+		return;
+	block_count_current = ofToString(block_data->getBlockCount());
+	size_current = ofToString(block_data->getSizeRow()) + "x" + ofToString(block_data->getSizeCol()) + "x" + ofToString(block_data->getSizeHeight());
+}
+
+//--------------------------------------------------------------
 void ofApp::maxSizeChanged(int& v) {
 	int max_count = max_r * max_c * max_h;
 	block_count_1.setMax(max_count);
@@ -143,6 +173,8 @@ void ofApp::setBlockClicked() {
 
 	block_data = std::make_unique<blockData>(block_count_1.get(), block_count_2.get(), max_r.get(), max_c.get(), max_h.get(), density.get(), allow_duplication.get());
 
+	if (block_data)
+		blockSettingUpdate();
 }
 
 //--------------------------------------------------------------
@@ -153,6 +185,7 @@ void ofApp::generateBlockClicked() {
 		draw_object.reset();
 	block_data->generateBlock();
 	draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
+	blockCurrentInfoUpdate();
 }
 
 //--------------------------------------------------------------
