@@ -27,10 +27,12 @@ class ofApp : public ofBaseApp{
 		void initializeUiValue();
 		void guiBlockSetup();
 		void guiDrawSetup();
+		void guiStatusSetup();
 
 		void drawObjectUpdate();
 		void blockSettingUpdate();
 		void blockCurrentInfoUpdate();
+		void statusUpdate();
 
 		void maxSizeChanged(int & v);
 		void maxBlockCountChanged(int & v);
@@ -57,13 +59,13 @@ class ofApp : public ofBaseApp{
 		ofxLabel block_count_setting, max_size_setting, density_setting, allow_duplication_setting;
 		ofxLabel block_count_current, size_current;
 		ofParameter<void> set_block, generate_block;
-
 		ofParameter<float> cam_degree_xz, cam_degree_y;
 		ofParameter<float> light_degree_xz, light_degree_y;
 		ofParameter<float> magnification;
 		ofParameter<int> thickness;
 		ofParameter<ofColor> draw_color;
 		ofParameter<void> save_image, reset;
+		ofParameter<std::string> block_status, draw_status;
 
 		ofParameterGroup block_settings;
 		ofxGuiGroup block_current_settings;

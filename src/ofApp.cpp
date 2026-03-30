@@ -11,6 +11,7 @@ void ofApp::setup(){
 	ofxGuiSetDefaultHeight(gui_height);
 	guiBlockSetup();
 	guiDrawSetup();
+	guiStatusSetup();
 
 	block_data = std::make_unique<blockData>(block_count_1, block_count_2, max_r, max_c, max_h);
 	block_data->generateBlock();
@@ -78,17 +79,18 @@ void ofApp::guiBlockSetup() {
 	gui_block.add(&block_current_settings);
 	gui_block.add(&block_current_info);
 	gui_block.add(block_generation);
+
 }
 
 //--------------------------------------------------------------
 void ofApp::guiDrawSetup() {
-	reset.addListener(this, &ofApp::initializeUiValue);
-	save_image.addListener(this, &ofApp::saveImageClicked);
-
 	draw_settings.setName("Draw Settings");
 	draw_functions.setName("Draw Functions");
 	cam_degree.setName("Cam degree");
 	light_degree.setName("Light degree");
+
+	reset.addListener(this, &ofApp::initializeUiValue);
+	save_image.addListener(this, &ofApp::saveImageClicked);
 
 	cam_degree.add(cam_degree_xz.set("Horizontal", 25, 0, 359.99));
 	cam_degree.add(cam_degree_y.set("Vertical", 20, -89.99, 89.99));
@@ -104,10 +106,14 @@ void ofApp::guiDrawSetup() {
 
 	gui_draw.setup("DRAW MENU", "draw_settings.xml", rect_draw_gui.x, rect_draw_gui.y);
 	gui_draw.setWidthElements(gui_width);
-	gui_draw.setDefaultHeight(40);
 	gui_draw.add(draw_settings);
 	gui_draw.add(draw_color.set("Draw color", ofColor(220, 185, 154)));
 	gui_draw.add(draw_functions);
+}
+
+//--------------------------------------------------------------
+void ofApp::guiStatusSetup() {
+	
 }
 
 //--------------------------------------------------------------
@@ -136,6 +142,28 @@ void ofApp::blockCurrentInfoUpdate() {
 		return;
 	block_count_current = ofToString(block_data->getBlockCount());
 	size_current = ofToString(block_data->getSizeRow()) + "x" + ofToString(block_data->getSizeCol()) + "x" + ofToString(block_data->getSizeHeight());
+}
+
+//--------------------------------------------------------------
+void ofApp::statusUpdate() {
+	if (block_data && block_data->status.isUpdated()) {
+		statusMessage s = block_data->status.getStatus();
+		if (s.level == statusLevel::Error)
+			block_status = "[ ERROR ] " + s.msg;
+		if (s.level == statusLevel::Warning)
+			block_status = "[ WARNING ] " + s.msg;
+		if (s.level == statusLevel::Info)
+			block_status = "[ INFO ] " + s.msg;
+	}
+	if (draw_object && draw_object->status.isUpdated()) {
+		statusMessage s = draw_object->status.getStatus();
+		if (s.level == statusLevel::Error)
+			draw_status = "[ ERROR ] " + s.msg;
+		if (s.level == statusLevel::Warning)
+			draw_status = "[ WARNING ] " + s.msg;
+		if (s.level == statusLevel::Info)
+			draw_status = "[ INFO ] " + s.msg;
+	}
 }
 
 //--------------------------------------------------------------
@@ -207,10 +235,11 @@ void ofApp::update(){
 		drawObjectUpdate();
 		draw_object->render();
 	}
+	statusUpdate();
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void ofApp::draw() {
 	ofSetColor(50);
 	ofDrawRectangle(rect_block_gui);
 	ofDrawRectangle(rect_draw_gui);
