@@ -49,19 +49,19 @@
 			<UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons">
-			<UniqueIdentifier>{08447D34--DFC-F-41-2D-9-8E1-BED369D9CC56}</UniqueIdentifier>
+			<UniqueIdentifier>{D0553F5F--152-2-4A-58-9-C9C-AF01AC539FFF}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxBlockGenerator">
-			<UniqueIdentifier>{4F0AC58E--AF4-5-45-FF-9-CB8-B4C1468C78FA}</UniqueIdentifier>
+			<UniqueIdentifier>{333D110D--195-5-4E-35-8-005-387B5DA15D50}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxBlockGenerator\src">
-			<UniqueIdentifier>{899DFDE0--D98-C-43-CF-A-35D-B44249EDCB18}</UniqueIdentifier>
+			<UniqueIdentifier>{16448B46--E85-0-4E-46-B-8F3-98F66209DF29}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxGui">
-			<UniqueIdentifier>{6121923F--213-6-41-D8-A-B2A-0CB72AC3427B}</UniqueIdentifier>
+			<UniqueIdentifier>{B83A55CE--199-C-42-60-A-ECD-7793F575ECAA}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxGui\src">
-			<UniqueIdentifier>{A25AF699--A80-3-4E-D3-B-82E-1495FCA36F21}</UniqueIdentifier>
+			<UniqueIdentifier>{AB2EFD48--8DB-E-44-C2-A-AC3-7B8FDFD06F96}</UniqueIdentifier>
 		</Filter>
 	</ItemGroup>
 	<ItemGroup>
