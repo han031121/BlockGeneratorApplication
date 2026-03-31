@@ -27,12 +27,12 @@ class ofApp : public ofBaseApp{
 		void initializeUiValue();
 		void guiBlockSetup();
 		void guiDrawSetup();
-		void guiStatusSetup();
 
 		void drawObjectUpdate();
 		void blockSettingUpdate();
 		void blockCurrentInfoUpdate();
 		void statusUpdate();
+		void drawStatus();
 
 		void maxSizeChanged(int & v);
 		void maxBlockCountChanged(int & v);
@@ -41,6 +41,8 @@ class ofApp : public ofBaseApp{
 		void generateBlockClicked();
 		void drawResetClicked();
 		void saveImageClicked();
+
+		ofTrueTypeFont font_status;
 
 		std::unique_ptr<blockData> block_data;
 		std::unique_ptr<drawObject> draw_object;
@@ -52,6 +54,8 @@ class ofApp : public ofBaseApp{
 		ofRectangle rect_draw_gui;
 		ofRectangle rect_block_gui;
 		ofRectangle rect_image;
+		ofRectangle rect_status_block;
+		ofRectangle rect_status_draw;
 
 		ofParameter<int> block_count_1 = 4, block_count_2 = 8, max_r = 3, max_c = 3, max_h = 3;
 		ofParameter<float> density;

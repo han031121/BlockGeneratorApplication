@@ -6,12 +6,12 @@ void ofApp::setup(){
 
 	updateLayout();
 
+	font_status.load("Roboto-Regular.ttf", 16);
 	ofxBaseGui::loadFont("Roboto-Regular.ttf", 20);
 
 	ofxGuiSetDefaultHeight(gui_height);
 	guiBlockSetup();
 	guiDrawSetup();
-	guiStatusSetup();
 
 	block_data = std::make_unique<blockData>(block_count_1, block_count_2, max_r, max_c, max_h);
 	block_data->generateBlock();
@@ -25,10 +25,13 @@ void ofApp::setup(){
 void ofApp::updateLayout() {
 	float w = ofGetWidth();
 	float h = ofGetHeight();
+	float status_h = 120;
 
-	rect_block_gui.set(margin, margin, gui_width, h - 2 * margin);
-	rect_draw_gui.set(gui_width + 2 * margin, margin, gui_width, h - 2 * margin);
+	rect_block_gui.set(margin, margin, gui_width, h - 3 * margin - status_h);
+	rect_draw_gui.set(gui_width + 2 * margin, margin, gui_width, h - 3 * margin - status_h);
 	rect_image.set(gui_width * 2 + 3 * margin, margin, w - 2 * gui_width - 4 * margin, h - 2 * margin);
+	rect_status_block.set(rect_block_gui.x, h - margin - status_h, gui_width, status_h);
+	rect_status_draw.set(rect_draw_gui.x, h - margin - status_h, gui_width, status_h);
 }
 
 //--------------------------------------------------------------
@@ -112,11 +115,6 @@ void ofApp::guiDrawSetup() {
 }
 
 //--------------------------------------------------------------
-void ofApp::guiStatusSetup() {
-	
-}
-
-//--------------------------------------------------------------
 void ofApp::drawObjectUpdate() {
 	draw_object->camDegreeUpdate(cam_degree_xz.get(), cam_degree_y.get());
 	draw_object->lightDegreeUpdate(light_degree_xz.get(), light_degree_y.get());
@@ -164,6 +162,35 @@ void ofApp::statusUpdate() {
 		if (s.level == statusLevel::Info)
 			draw_status = "[ INFO ] " + s.msg;
 	}
+}
+
+//--------------------------------------------------------------
+void ofApp::drawStatus() {
+	float max_width = gui_width - 30;
+
+	std::string s = "";
+	std::string tmp = "";
+	for (char c : block_status.get()) {
+		s += c;
+		tmp += c;
+		if (font_status.stringWidth(tmp) > max_width) {
+			s += '\n';
+			tmp = "";
+		}
+	}
+	font_status.drawString(s, rect_status_block.x + margin, rect_status_block.y + margin + font_status.getSize());
+
+	s = "";
+	tmp = "";
+	for (char c : draw_status.get()) {
+		s += c;
+		tmp += c;
+		if (font_status.stringWidth(tmp) > max_width) {
+			s += '\n';
+			tmp = "";
+		}
+	}
+	font_status.drawString(s, rect_status_draw.x + margin, rect_status_draw.y + margin + font_status.getSize());
 }
 
 //--------------------------------------------------------------
@@ -243,6 +270,13 @@ void ofApp::draw() {
 	ofSetColor(50);
 	ofDrawRectangle(rect_block_gui);
 	ofDrawRectangle(rect_draw_gui);
+
+	ofNoFill();
+	ofSetLineWidth(3);
+	ofDrawRectangle(rect_status_block);
+	ofDrawRectangle(rect_status_draw);
+	ofFill();
+
 	ofSetColor(220);
 	ofDrawRectangle(rect_image);
 
@@ -256,6 +290,9 @@ void ofApp::draw() {
 
 	gui_block.draw();
 	gui_draw.draw();
+
+	ofSetColor(255);
+	drawStatus();
 }
 
 //--------------------------------------------------------------
