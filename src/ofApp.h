@@ -67,6 +67,7 @@ class ofApp : public ofBaseApp{
 		ofParameter<float> light_degree_xz, light_degree_y;
 		ofParameter<float> magnification;
 		ofParameter<int> thickness;
+		ofParameter<bool> fix_light;
 		ofParameter<ofColor> draw_color;
 		ofParameter<void> save_image, reset;
 		ofParameter<std::string> block_status, draw_status;

@@ -104,6 +104,7 @@ void ofApp::guiDrawSetup() {
 	draw_settings.add(light_degree);
 	draw_settings.add(thickness.set("Line thickness", 5, 0, 10));
 	draw_settings.add(magnification.set("Magnification", 1, 0.2, 5));
+	draw_settings.add(fix_light.set("Fix light degree", false));
 	draw_functions.add(save_image.set("Save image (S)"));
 	draw_functions.add(reset.set("Reset settings (R)"));
 
@@ -264,7 +265,12 @@ void ofApp::update(){
 		drawObjectUpdate();
 		draw_object->render();
 	}
+
 	statusUpdate();
+
+	if (fix_light) {
+		light_degree_xz = cam_degree_xz;
+	}
 }
 
 //--------------------------------------------------------------
