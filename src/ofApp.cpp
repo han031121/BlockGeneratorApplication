@@ -4,14 +4,12 @@
 void ofApp::setup(){
 	ofBackground(0);
 
+	initializeUiValue();
+	loadGuiSettings();
+
 	updateLayout();
-
-	font_status.load("Roboto-Regular.ttf", 16);
-	ofxBaseGui::loadFont("Roboto-Regular.ttf", 20);
-
-	ofxGuiSetDefaultHeight(gui_height);
-	guiBlockSetup();
-	guiDrawSetup();
+	guiSetListener();
+	guiSetScale();
 
 	block_data = std::make_unique<blockData>(block_count_1, block_count_2, max_r, max_c, max_h);
 	block_data->generateBlock();
@@ -25,13 +23,12 @@ void ofApp::setup(){
 void ofApp::updateLayout() {
 	float w = ofGetWidth();
 	float h = ofGetHeight();
-	float status_h = 120;
 
-	rect_block_gui.set(margin, margin, gui_width, h - 3 * margin - status_h);
-	rect_draw_gui.set(gui_width + 2 * margin, margin, gui_width, h - 3 * margin - status_h);
+	rect_block_gui.set(margin, margin, gui_width, h - 3 * margin - status_height);
+	rect_draw_gui.set(gui_width + 2 * margin, margin, gui_width, h - 3 * margin - status_height);
 	rect_image.set(gui_width * 2 + 3 * margin, margin, w - 2 * gui_width - 4 * margin, h - 2 * margin);
-	rect_status_block.set(rect_block_gui.x, h - margin - status_h, gui_width, status_h);
-	rect_status_draw.set(rect_draw_gui.x, h - margin - status_h, gui_width, status_h);
+	rect_status_block.set(rect_block_gui.x, h - margin - status_height, gui_width, status_height);
+	rect_status_draw.set(rect_draw_gui.x, h - margin - status_height, gui_width, status_height);
 }
 
 //--------------------------------------------------------------
@@ -51,14 +48,6 @@ void ofApp::guiBlockSetup() {
 	block_current_settings.setName("Current Settings");
 	block_current_info.setName("Current block info");
 	block_generation.setName("Block Generation");
-
-	set_block.addListener(this, &ofApp::setBlockClicked);
-	generate_block.addListener(this, &ofApp::generateBlockClicked);
-	max_r.addListener(this, &ofApp::maxSizeChanged);
-	max_c.addListener(this, &ofApp::maxSizeChanged);
-	max_h.addListener(this, &ofApp::maxSizeChanged);
-	block_count_1.addListener(this, &ofApp::minBlockCountChanged);
-	block_count_2.addListener(this, &ofApp::maxBlockCountChanged);
 
 	block_settings.add(block_count_1.set("Min block count", 4, 1, 1000));
 	block_settings.add(block_count_2.set("Max block count", 8, 1, 1000));
@@ -82,7 +71,6 @@ void ofApp::guiBlockSetup() {
 	gui_block.add(&block_current_settings);
 	gui_block.add(&block_current_info);
 	gui_block.add(block_generation);
-
 }
 
 //--------------------------------------------------------------
@@ -91,9 +79,6 @@ void ofApp::guiDrawSetup() {
 	draw_functions.setName("Draw Functions");
 	cam_degree.setName("Cam degree");
 	light_degree.setName("Light degree");
-
-	reset.addListener(this, &ofApp::initializeUiValue);
-	save_image.addListener(this, &ofApp::saveImageClicked);
 
 	cam_degree.add(cam_degree_xz.set("Horizontal", 25, 0, 359.99));
 	cam_degree.add(cam_degree_y.set("Vertical", 20, -89.99, 89.99));
@@ -113,6 +98,59 @@ void ofApp::guiDrawSetup() {
 	gui_draw.add(draw_settings);
 	gui_draw.add(draw_color.set("Draw color", ofColor(220, 185, 154)));
 	gui_draw.add(draw_functions);
+}
+
+//--------------------------------------------------------------
+void ofApp::guiSetListener() {
+	set_block.addListener(this, &ofApp::setBlockClicked);
+	generate_block.addListener(this, &ofApp::generateBlockClicked);
+	max_r.addListener(this, &ofApp::maxSizeChanged);
+	max_c.addListener(this, &ofApp::maxSizeChanged);
+	max_h.addListener(this, &ofApp::maxSizeChanged);
+	block_count_1.addListener(this, &ofApp::minBlockCountChanged);
+	block_count_2.addListener(this, &ofApp::maxBlockCountChanged);
+
+	reset.addListener(this, &ofApp::initializeUiValue);
+	save_image.addListener(this, &ofApp::saveImageClicked);
+}
+
+//--------------------------------------------------------------
+void ofApp::guiSetScale() {
+	gui_width = WIDTH_UNIT * gui_scale;
+	gui_height = HEIGHT_UNIT * gui_scale;
+	status_height = STATUS_HEIGHT_UNIT * gui_scale;
+	margin = MARGIN_UNIT * gui_scale;
+
+	updateLayout();
+
+	ofxGuiSetDefaultHeight(gui_height);
+	font_status.load("Roboto-Regular.ttf", STATUS_FONT_UNIT * gui_scale);
+	ofxBaseGui::loadFont("Roboto-Regular.ttf", FONT_UNIT * gui_scale);
+
+	guiRebuild();
+}
+
+//--------------------------------------------------------------
+void ofApp::guiRebuild() {
+	gui_block.clear();
+	gui_draw.clear();
+
+	block_settings.clear();
+	block_current_info.clear();
+	block_current_settings.clear();
+	block_generation.clear();
+
+	cam_degree.clear();
+	light_degree.clear();
+	draw_settings.clear();
+	draw_functions.clear();
+
+	blockSettingUpdate();
+	if (block_data)
+		blockCurrentInfoUpdate();
+
+	guiBlockSetup();
+	guiDrawSetup();
 }
 
 //--------------------------------------------------------------
@@ -260,6 +298,41 @@ void ofApp::saveImageClicked() {
 }
 
 //--------------------------------------------------------------
+void ofApp::saveGuiSettings() {
+	//window size
+	//gui scale
+	//block, draw settings?
+	ofJson json;
+
+	json["window"]["width"] = ofGetWidth();
+	json["window"]["height"] = ofGetHeight();
+
+	json["gui"]["scale"] = gui_scale;
+
+	ofSavePrettyJson("gui_settings.json", json);
+}
+
+//--------------------------------------------------------------
+void ofApp::loadGuiSettings() {
+	std::string path = "gui_settings.json";
+
+	if (!ofFile::doesFileExist(path))
+		return;
+
+	ofJson json = ofLoadJson(path);
+
+	if (json.contains("window")) {
+		int w = json["window"].value("width", ofGetWidth());
+		int h = json["window"].value("height", ofGetHeight());
+		ofSetWindowShape(w, h);
+	}
+	if (json.contains("gui")) {
+		int scale = json["gui"].value("scale", gui_scale);
+		gui_scale = scale;
+	}
+}
+
+//--------------------------------------------------------------
 void ofApp::update(){
 	if (draw_object) {
 		drawObjectUpdate();
@@ -313,6 +386,16 @@ void ofApp::keyPressed(int key){
 		saveImageClicked();
 	} else if (key == 'r' || key == 'R') {
 		drawResetClicked();
+	} else if (key == '=') {
+		if (gui_scale < 8) {
+			gui_scale++;
+			guiSetScale();
+		}
+	} else if (key == '-') {
+		if (gui_scale > 1) {
+			gui_scale--;
+			guiSetScale();
+		}
 	}
 }
 
@@ -364,4 +447,9 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+//--------------------------------------------------------------
+void ofApp::exit() {
+	saveGuiSettings();
 }
