@@ -138,8 +138,8 @@ void drawObject::saveImage(std::string filename, std::string path) {
 	}
 	ofPixels pixels;
 	fbo.readToPixels(pixels);
-	ofSaveImage(pixels, filename);
 	std::string name = ofFilePath::join(path, filename);
+	ofSaveImage(pixels, name);
 
 	status.setStatus(statusLevel::Info, "[ drawObject ] Image " + filename + " saved.");
 };
