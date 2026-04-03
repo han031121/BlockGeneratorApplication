@@ -33,7 +33,8 @@ class ofApp : public ofBaseApp{
 		void exit();
 
 		void updateLayout();
-		void initializeUiValue();
+		void initializeBlockValue();
+		void initializeDrawValue();
 		void guiBlockSetup();
 		void guiDrawSetup();
 		void guiSetListener();
@@ -75,7 +76,7 @@ class ofApp : public ofBaseApp{
 		ofRectangle rect_status_draw;
 
 		ofParameter<int> block_count_1 = 4, block_count_2 = 8, max_r = 3, max_c = 3, max_h = 3;
-		ofParameter<float> density;
+		ofParameter<float> density = 20;
 		ofParameter<bool> allow_duplication = false;
 		ofxLabel block_count_setting, max_size_setting, density_setting, allow_duplication_setting;
 		ofxLabel block_count_current, size_current;

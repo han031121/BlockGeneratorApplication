@@ -4,7 +4,8 @@
 void ofApp::setup() {
 	ofBackground(0);
 
-	initializeUiValue();
+	initializeDrawValue();
+	initializeBlockValue();
 	loadGuiSettings();
 
 	updateLayout();
@@ -32,14 +33,33 @@ void ofApp::updateLayout() {
 }
 
 //--------------------------------------------------------------
-void ofApp::initializeUiValue() {
-	cam_degree_xz.set(25);
-	cam_degree_y.set(20);
-	light_degree_xz.set(25);
-	light_degree_y.set(38);
-	thickness.set(5);
-	magnification.set(1);
-	draw_color.set(ofColor(220, 185, 154));
+void ofApp::initializeBlockValue() {
+	block_count_1.set("Min block count", 4, 1, 1000);
+	block_count_2.set("Max block count", 8, 1, 1000);
+	max_r.set("Max row", 3, 1, 10);
+	max_c.set("Max colunm", 3, 1, 10);
+	max_h.set("Max height", 3, 1, 10);
+	density.set("Density", 20, 0, 100);
+	allow_duplication.set("Allow duplication", false);
+
+	set_block.set("Set block (N)");
+	generate_block.set("Generate block (G)");
+}
+
+//--------------------------------------------------------------
+void ofApp::initializeDrawValue() {
+	cam_degree_xz.set("Horizontal", 25, 0, 359.99);
+	cam_degree_y.set("Vertical", 20, -89.99, 89.99);
+	light_degree_xz.set("Horizontal", 25, 0, 359.99);
+	light_degree_y.set("Vertical", 38, -89.99, 89.99);
+
+	draw_color.set("Draw color", ofColor(220, 185, 154));
+	thickness.set("Line thickness", 5, 0, 10);
+	magnification.set("Magnification", 1, 0.2, 5);
+	fix_light.set("Fix light degree", false);
+
+	save_image.set("Save image (S)");
+	reset.set("Reset settings (R)");
 }
 
 //--------------------------------------------------------------
@@ -49,21 +69,24 @@ void ofApp::guiBlockSetup() {
 	block_current_info.setName("Current block info");
 	block_generation.setName("Block Generation");
 
-	block_settings.add(block_count_1.set("Min block count", 4, 1, 1000));
-	block_settings.add(block_count_2.set("Max block count", 8, 1, 1000));
-	block_settings.add(max_r.set("Max row", 3, 1, 10));
-	block_settings.add(max_c.set("Max colunm", 3, 1, 10));
-	block_settings.add(max_h.set("Max height", 3, 1, 10));
-	block_settings.add(density.set("Density", 20, 0, 100));
-	block_settings.add(allow_duplication.set("Allow duplication", false));
+	block_current_settings.setDefaultHeight(gui_height);
+	block_current_info.setDefaultHeight(gui_height);
+
+	block_settings.add(block_count_1);
+	block_settings.add(block_count_2);
+	block_settings.add(max_r);
+	block_settings.add(max_c);
+	block_settings.add(max_h);
+	block_settings.add(density);
+	block_settings.add(allow_duplication);
 	block_current_settings.add(block_count_setting.setup("Block count", ""));
 	block_current_settings.add(max_size_setting.setup("Max size", ""));
 	block_current_settings.add(density_setting.setup("Density", ""));
 	block_current_settings.add(allow_duplication_setting.setup("Duplication", ""));
 	block_current_info.add(block_count_current.setup("Block count", ""));
 	block_current_info.add(size_current.setup("Size", ""));
-	block_generation.add(set_block.set("Set block (N)"));
-	block_generation.add(generate_block.set("Generate block (G)"));
+	block_generation.add(set_block);
+	block_generation.add(generate_block);
 
 	gui_block.setup("BLOCK MENU", "block_settings.xml", rect_block_gui.x, rect_block_gui.y);
 	gui_block.setWidthElements(gui_width);
@@ -80,23 +103,23 @@ void ofApp::guiDrawSetup() {
 	cam_degree.setName("Cam degree");
 	light_degree.setName("Light degree");
 
-	cam_degree.add(cam_degree_xz.set("Horizontal", 25, 0, 359.99));
-	cam_degree.add(cam_degree_y.set("Vertical", 20, -89.99, 89.99));
-	light_degree.add(light_degree_xz.set("Horizontal", 25, 0, 359.99));
-	light_degree.add(light_degree_y.set("Vertical", 38, -89.99, 89.99));
+	cam_degree.add(cam_degree_xz);
+	cam_degree.add(cam_degree_y);
+	light_degree.add(light_degree_xz);
+	light_degree.add(light_degree_y);
 
 	draw_settings.add(cam_degree);
 	draw_settings.add(light_degree);
-	draw_settings.add(thickness.set("Line thickness", 5, 0, 10));
-	draw_settings.add(magnification.set("Magnification", 1, 0.2, 5));
-	draw_settings.add(fix_light.set("Fix light degree", false));
-	draw_functions.add(save_image.set("Save image (S)"));
-	draw_functions.add(reset.set("Reset settings (R)"));
+	draw_settings.add(thickness);
+	draw_settings.add(magnification);
+	draw_settings.add(fix_light);
+	draw_functions.add(save_image);
+	draw_functions.add(reset);
 
 	gui_draw.setup("DRAW MENU", "draw_settings.xml", rect_draw_gui.x, rect_draw_gui.y);
 	gui_draw.setWidthElements(gui_width);
 	gui_draw.add(draw_settings);
-	gui_draw.add(draw_color.set("Draw color", ofColor(220, 185, 154)));
+	gui_draw.add(draw_color);
 	gui_draw.add(draw_functions);
 }
 
@@ -110,7 +133,7 @@ void ofApp::guiSetListener() {
 	block_count_1.addListener(this, &ofApp::minBlockCountChanged);
 	block_count_2.addListener(this, &ofApp::maxBlockCountChanged);
 
-	reset.addListener(this, &ofApp::initializeUiValue);
+	reset.addListener(this, &ofApp::initializeDrawValue);
 	save_image.addListener(this, &ofApp::saveImageClicked);
 }
 
@@ -151,6 +174,8 @@ void ofApp::guiRebuild() {
 
 	guiBlockSetup();
 	guiDrawSetup();
+	blockSettingUpdate();
+	blockCurrentInfoUpdate();
 }
 
 //--------------------------------------------------------------
@@ -284,7 +309,7 @@ void ofApp::generateBlockClicked() {
 
 //--------------------------------------------------------------
 void ofApp::drawResetClicked() {
-	initializeUiValue();
+	initializeDrawValue();
 }
 
 //--------------------------------------------------------------
