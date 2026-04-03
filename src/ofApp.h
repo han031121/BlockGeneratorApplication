@@ -1,7 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxBlockGenerator.h"
+#include "blockData.h"
+#include "drawObject.h"
 #include "ofxGui.h"
 
 #define MARGIN_UNIT 3
