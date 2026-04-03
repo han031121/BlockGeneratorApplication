@@ -44,6 +44,17 @@ void ofApp::initializeBlockValue() {
 
 	set_block.set("Set block (N)");
 	generate_block.set("Generate block (G)");
+
+	int max_count = max_r * max_c * max_h;
+	block_count_1.setMax(max_count);
+	block_count_1 = block_count_1.get();
+	block_count_2.setMax(max_count);
+	block_count_2 = block_count_2.get();
+
+	if (block_count_1 > max_count)
+		block_count_1 = max_count;
+	if (block_count_2 > max_count)
+		block_count_2 = max_count;
 }
 
 //--------------------------------------------------------------
