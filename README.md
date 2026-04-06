@@ -2,7 +2,8 @@
 
 ## 개요
 
-사용자가 지정한 조건에 맞게 쌓기나무 블록의 이미지를 출력하는 프로그램입니다.
+사용자가 지정한 조건에 맞게 쌓기나무 블록 군집을 무작위로 생성하고,
+이를 2D 이미지로 렌더링하여 저장할 수 있는 프로그램입니다.
 
 <img src = "https://github.com/han031121/BlockGeneratorApplication/blob/master/example_image.png" width = "500" height = "500">
 
@@ -14,9 +15,9 @@
 
 ### [1.0.1 Release](https://github.com/han031121/BlockGeneratorApplication/releases/tag/v1.0.1)
 
-위 링크에서 **block_generator.zip** 설치 후, **blockGeneratorApplication.exe** 실행해 주세요.
+위 링크에서 **block_generator.zip**을 다운로드 및 압축 해제 후, **blockGeneratorApplication.exe**을 실행해 주세요.
 
-실행 시 필요한 파일이 누락되어 정상 실행이 불가한 경우, zip파일에 포함된 rc_redist.x64.exe를 먼저 실행해 주세요.
+실행 시 필요한 파일이 누락되어 정상 실행이 불가한 경우, zip파일에 포함된 VC_redist.x64.exe를 먼저 실행해 주세요.
 
 ## 사용 방법
 
@@ -25,13 +26,15 @@
 3. **Generate block** 버튼을 클릭하면 조건에 맞는 블록 군집을 생성합니다.
 4. 오른쪽의 **DRAW MENU**에서 블록 이미지 설정을 변경하거나 및 이미지를 저장할 수 있습니다.
 
+---
+
 ## 상세 설명
 
 ### BLOCK MENU
 
 - **Block Settings** : 생성할 블록 군집의 조건을 설정합니다.
 
-    - **Min block count** / **Max block count** : 생성될 블록 군집의 최대/최소 블록 개수를 정합니다.
+    - **Min block count** / **Max block count** : 생성될 블록 군집의 최소/최대 블록 개수를 정합니다.
 
     - **Max row** / **Max column** / **Max height** : 생성될 블록 군집의 최대 크기를 정합니다. (행/열/높이)
 
@@ -91,6 +94,8 @@
 
 - 앞의 블록에 가려져 높이를 알 수 없는 부분이 존재할 수 있습니다.
 
+---
+
 ## 개발
 
 이미지 생성 및 GUI는 **[openFrameworks](https://openframeworks.cc/)** 를 이용해 만들어졌습니다.
@@ -111,9 +116,9 @@
 
 ### 기타
 
-- 설정 파일(json)은 `data` 에 저장됩니다.
+- 설정 파일(json)은 `data` 폴더에 저장됩니다.
 - `data` 폴더의 폰트 파일이 없으면 실행되지 않습니다.
-- 이미지는 `saved_image`에 저장됩니다.
+- 이미지는 `saved_images` 폴더에 저장됩니다.
 
 ## 알고리즘
 
@@ -121,7 +126,7 @@
 1. `block_count_1`과 `block_count_2` 사이의 범위에서 하나의 값을 `block_count`로 정합니다.
 2. `density` 값에 따른 가중치를 최대 크기 내의 모든 좌표에 할당합니다.
 3. 블록 생성 시작 위치를 정하고, 블록 하나를 생성합니다. 이때, 시작 위치는 가중치의 영향을 받습니다.
-4. 모든 생성된 블록들에 대해 인접한 좌표를 생성 위치 후보로 설정합니다. 생성 위치 후보들 중에서 가중치 랜덤을 통해 하나의 위치를 정하여 블록을 생성합니다.
+4. 모든 생성된 블록들에 대해 인접한 좌표를 생성 위치 후보로 설정합니다. 생성 위치 후보들 중 하나를 가중치 기반 무작위 선택으로 결정한 뒤, 해당 위치에 블록을 생성합니다.
 5. 생성된 블록의 개수가 `block_count`만큼 될 때 까지 4번 과정을 반복합니다.
 
 ### 중복 제거
