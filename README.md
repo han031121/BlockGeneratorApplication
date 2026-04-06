@@ -5,7 +5,7 @@
 사용자가 지정한 조건에 맞게 쌓기나무 블록 군집을 무작위로 생성하고,
 이를 2D 이미지로 렌더링하여 저장할 수 있는 프로그램입니다.
 
-<img src = "https://github.com/han031121/BlockGeneratorApplication/blob/master/example_image.png" width = "500" height = "500">
+<img src = "https://github.com/han031121/BlockGeneratorApplication/blob/master/example_image.png" width = "800" height = "800">
 
 ## 실행 환경
 
