@@ -83,6 +83,7 @@
 - **R** : Reset settings
 - **-** : gui 크기 줄이기
 - **=** : gui 크기 늘리기
+- **Tab** : gui 토글
 
 ## 주의사항
 
