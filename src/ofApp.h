@@ -32,6 +32,8 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		void exit();
 
+		//--------------------------------------------------------------
+
 		void updateLayout();
 		void initializeBlockValue();
 		void initializeDrawValue();
@@ -46,6 +48,7 @@ class ofApp : public ofBaseApp{
 		void blockCurrentInfoUpdate();
 		void statusUpdate();
 		void drawStatus();
+		void drawEtc();
 
 		void maxSizeChanged(int & v);
 		void maxBlockCountChanged(int & v);
@@ -58,6 +61,9 @@ class ofApp : public ofBaseApp{
 		void saveGuiSettings();
 		void loadGuiSettings();
 
+		//--------------------------------------------------------------
+
+		ofTrueTypeFont font_gui;
 		ofTrueTypeFont font_status;
 
 		std::unique_ptr<blockData> block_data;
@@ -67,7 +73,13 @@ class ofApp : public ofBaseApp{
 		float margin = 10.0f;
 		float status_height = 120.0f;
 		int image_size = 1000;
-		int gui_scale = 4;
+		float gui_scale = 4;
+		bool gui_on = true;
+
+		std::string help_text = "[ Tab ] : Toggle GUI\n[ = ] : GUI scale up\n[ - ] : GUI scale down";
+		float help_height;
+
+		//--------------------------------------------------------------
 
 		ofRectangle rect_draw_gui;
 		ofRectangle rect_block_gui;
