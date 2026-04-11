@@ -27,6 +27,8 @@ void blockData::generateBlock() {
 		makeBlock();
 	}
 
+	status.setStatus(statusLevel::Info, "[ blockData ] Block generated.");
+
 	if (count > fail_count) {
 		init();
 		is_generated = false;
@@ -114,7 +116,6 @@ void blockData::makeBlock() {
     }
 
 	is_generated = true;
-	status.setStatus(statusLevel::Info, "[ blockData ] Block generated.");
 }
 
 void blockData::setStartPoint() {

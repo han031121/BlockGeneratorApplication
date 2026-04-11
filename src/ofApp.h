@@ -32,6 +32,9 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		void exit();
 
+		bool generate_request = false;
+		bool generate_status_changed = false;
+
 		//--------------------------------------------------------------
 
 		void updateLayout();
