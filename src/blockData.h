@@ -18,7 +18,8 @@
 #define EPSILON 1e-12
 #define DEFAULT_WEIGHT 100.0
 #define DENSITY_COEFF 0.02
-#define FAIL_COUNT 3000
+#define DEFAULT_FAIL_COUNT 3000
+#define MAX_FAIL_COUNT 10000
 
 typedef std::tuple<int,int,int> Tuple;
 typedef std::pair<int, int> Pair;

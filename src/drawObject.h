@@ -17,9 +17,9 @@ private:
 	float light_degree_h;
 	float thickness;
 
-	int cam_fov = 15;
-	float cam_min_dist = 7000;
-	float default_cam_dist = 7000;
+	int cam_fov = 8;
+	float cam_min_dist = 12500;
+	float default_cam_dist = 12500;
 	float cam_dist = 0;
 	glm::vec3 cam_center;
 

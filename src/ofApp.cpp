@@ -18,8 +18,7 @@ void ofApp::setup() {
 
 	//generate objects
 	block_data = std::make_unique<blockData>(block_count_1, block_count_2, max_r, max_c, max_h);
-	block_data->generateBlock();
-	draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
+	//draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
 
 	//update label gui
 	blockSettingUpdate();
@@ -27,13 +26,21 @@ void ofApp::setup() {
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
+void ofApp::update() {
+	statusUpdate();
+
+	if (generate_request && generate_status_changed) {
+		block_data->generateBlock();
+		draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
+		blockCurrentInfoUpdate();
+		generate_request = false;
+		generate_status_changed = false;
+	}
+
 	if (draw_object) {
 		drawObjectUpdate();
 		draw_object->render();
 	}
-
-	statusUpdate();
 
 	if (fix_light) {
 		light_degree_xz = cam_degree_xz;
@@ -98,7 +105,7 @@ void ofApp::keyPressed(int key){
 	}
 
 	//gui scale up
-	else if (key == '=') {
+	else if (key == '=' && gui_on) {
 		if (gui_scale < 8) {
 			gui_scale += 0.5;
 			guiSetScale();
@@ -106,7 +113,7 @@ void ofApp::keyPressed(int key){
 	}
 
 	//gui scale down
-	else if (key == '-') {
+	else if (key == '-' && gui_on) {
 		if (gui_scale > 1) {
 			gui_scale -= 0.5;
 			guiSetScale();

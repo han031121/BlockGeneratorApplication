@@ -49,7 +49,7 @@ void ofApp::initializeDrawValue() {
 	light_degree_y.set("Vertical", 38, -89.99, 89.99);
 
 	draw_color.set("Draw color", ofColor(220, 185, 154));
-	thickness.set("Line thickness", 5, 0, 10);
+	thickness.set("Line thickness", 5, 0, 15);
 	magnification.set("Magnification", 1, 0.2, 5);
 	fix_light.set("Fix light degree", false);
 
@@ -252,6 +252,8 @@ void ofApp::drawStatus() {
 		}
 	}
 	font_status.drawString(s, rect_status_draw.x + margin, rect_status_draw.y + margin + font_status.getSize());
+
+	generate_status_changed = true;
 }
 
 //--------------------------------------------------------------
@@ -304,9 +306,10 @@ void ofApp::generateBlockClicked() {
 		return;
 	if (draw_object)
 		draw_object.reset();
-	block_data->generateBlock();
-	draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
-	blockCurrentInfoUpdate();
+
+	generate_request = true;
+	generate_status_changed = false;
+	block_data->status.setStatus(statusLevel::Info, "[ blockData ] Generating block...");
 }
 
 //--------------------------------------------------------------
