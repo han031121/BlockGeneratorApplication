@@ -18,7 +18,7 @@ void ofApp::setup() {
 
 	//generate objects
 	block_data = std::make_unique<blockData>(block_count_1, block_count_2, max_r, max_c, max_h);
-	draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
+	//draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
 
 	//update label gui
 	blockSettingUpdate();
