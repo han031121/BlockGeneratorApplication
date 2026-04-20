@@ -27,13 +27,11 @@ class ofApp : public ofBaseApp{
 		void mouseReleased(int x, int y, int button);
 		void mouseEntered(int x, int y);
 		void mouseExited(int x, int y);
+		void mouseScrolled(int x, int y, float scroll_x, float scroll_y);
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		void exit();
-
-		bool generate_request = false;
-		bool generate_status_changed = false;
 
 		//--------------------------------------------------------------
 
@@ -61,6 +59,9 @@ class ofApp : public ofBaseApp{
 		void drawResetClicked();
 		void saveImageClicked();
 
+		bool checkMouseOnImage();
+		void imageMouseDragged(int x, int y);
+
 		void saveGuiSettings();
 		void loadGuiSettings();
 
@@ -81,6 +82,12 @@ class ofApp : public ofBaseApp{
 
 		std::string help_text = "[ Tab ] : Toggle GUI\n[ = ] : GUI scale up\n[ - ] : GUI scale down";
 		float help_height;
+
+		bool generate_request = false;
+		bool generate_status_changed = false;
+
+		bool is_image_drag = false;
+		glm::vec2 drag_start_mouse;
 
 		//--------------------------------------------------------------
 
@@ -116,4 +123,7 @@ class ofApp : public ofBaseApp{
 
 		ofxPanel gui_block;
 		ofxPanel gui_draw;
+
+		float prev_cam_degree_xz;
+		float prev_cam_degree_y;
 };

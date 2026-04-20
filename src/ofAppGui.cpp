@@ -204,28 +204,6 @@ void ofApp::blockCurrentInfoUpdate() {
 }
 
 //--------------------------------------------------------------
-void ofApp::statusUpdate() {
-	if (block_data && block_data->status.isUpdated()) {
-		statusMessage s = block_data->status.getStatus();
-		if (s.level == statusLevel::Error)
-			block_status = "[ ERROR ] " + s.msg;
-		if (s.level == statusLevel::Warning)
-			block_status = "[ WARNING ] " + s.msg;
-		if (s.level == statusLevel::Info)
-			block_status = "[ INFO ] " + s.msg;
-	}
-	if (draw_object && draw_object->status.isUpdated()) {
-		statusMessage s = draw_object->status.getStatus();
-		if (s.level == statusLevel::Error)
-			draw_status = "[ ERROR ] " + s.msg;
-		if (s.level == statusLevel::Warning)
-			draw_status = "[ WARNING ] " + s.msg;
-		if (s.level == statusLevel::Info)
-			draw_status = "[ INFO ] " + s.msg;
-	}
-}
-
-//--------------------------------------------------------------
 void ofApp::drawStatus() {
 	float max_width = gui_width - 30;
 
@@ -259,6 +237,39 @@ void ofApp::drawStatus() {
 //--------------------------------------------------------------
 void ofApp::drawEtc() {
 	font_gui.drawString(help_text, rect_block_gui.x + margin, rect_block_gui.y + rect_block_gui.height - help_height - margin);
+}
+
+//--------------------------------------------------------------
+void ofApp::saveGuiSettings() {
+	//block, draw settings?
+	ofJson json;
+
+	json["window"]["width"] = ofGetWidth();
+	json["window"]["height"] = ofGetHeight();
+
+	json["gui"]["scale"] = gui_scale;
+
+	ofSavePrettyJson("gui_settings.json", json);
+}
+
+//--------------------------------------------------------------
+void ofApp::loadGuiSettings() {
+	std::string path = "gui_settings.json";
+
+	if (!ofFile::doesFileExist(path))
+		return;
+
+	ofJson json = ofLoadJson(path);
+
+	if (json.contains("window")) {
+		int w = json["window"].value("width", ofGetWidth());
+		int h = json["window"].value("height", ofGetHeight());
+		ofSetWindowShape(w, h);
+	}
+	if (json.contains("gui")) {
+		int scale = json["gui"].value("scale", gui_scale);
+		gui_scale = scale;
+	}
 }
 
 //--------------------------------------------------------------
@@ -328,34 +339,53 @@ void ofApp::saveImageClicked() {
 }
 
 //--------------------------------------------------------------
-void ofApp::saveGuiSettings() {
-	//block, draw settings?
-	ofJson json;
-
-	json["window"]["width"] = ofGetWidth();
-	json["window"]["height"] = ofGetHeight();
-
-	json["gui"]["scale"] = gui_scale;
-
-	ofSavePrettyJson("gui_settings.json", json);
+bool ofApp::checkMouseOnImage() {
+	int image_x = rect_image.getPosition().x;
+	int image_y = rect_image.getPosition().y;
+	int mouse_x = ofGetMouseX();
+	int mouse_y = ofGetMouseY();
+	if (mouse_x >= image_x || mouse_x <= image_x + image_size && mouse_y >= image_y && mouse_y <= image_y + image_size)
+		return true;
+	return false;
 }
 
 //--------------------------------------------------------------
-void ofApp::loadGuiSettings() {
-	std::string path = "gui_settings.json";
+void ofApp::imageMouseDragged(int x, int y) {
+	float coeff = 0.3f;
+	int offset_x = drag_start_mouse.x - x;
+	int offset_y = drag_start_mouse.y - y;
 
-	if (!ofFile::doesFileExist(path))
-		return;
+	cam_degree_xz = prev_cam_degree_xz + offset_x * coeff;
+	cam_degree_y = prev_cam_degree_y - offset_y * coeff;
 
-	ofJson json = ofLoadJson(path);
+	cam_degree_xz = fmod(cam_degree_xz, 360.0f);
+	if (cam_degree_xz < 0)
+		cam_degree_xz += 360.0f;
 
-	if (json.contains("window")) {
-		int w = json["window"].value("width", ofGetWidth());
-		int h = json["window"].value("height", ofGetHeight());
-		ofSetWindowShape(w, h);
+	if (cam_degree_y > 89.99)
+		cam_degree_y = 89.99;
+	if (cam_degree_y < -89.99)
+		cam_degree_y = -89.99;
+}
+
+//--------------------------------------------------------------
+void ofApp::statusUpdate() {
+	if (block_data && block_data->status.isUpdated()) {
+		statusMessage s = block_data->status.getStatus();
+		if (s.level == statusLevel::Error)
+			block_status = "[ ERROR ] " + s.msg;
+		if (s.level == statusLevel::Warning)
+			block_status = "[ WARNING ] " + s.msg;
+		if (s.level == statusLevel::Info)
+			block_status = "[ INFO ] " + s.msg;
 	}
-	if (json.contains("gui")) {
-		int scale = json["gui"].value("scale", gui_scale);
-		gui_scale = scale;
+	if (draw_object && draw_object->status.isUpdated()) {
+		statusMessage s = draw_object->status.getStatus();
+		if (s.level == statusLevel::Error)
+			draw_status = "[ ERROR ] " + s.msg;
+		if (s.level == statusLevel::Warning)
+			draw_status = "[ WARNING ] " + s.msg;
+		if (s.level == statusLevel::Info)
+			draw_status = "[ INFO ] " + s.msg;
 	}
 }

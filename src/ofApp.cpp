@@ -139,17 +139,24 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+	//isImageDrag이면 이미지 회전
+	if (is_image_drag)
+		imageMouseDragged(x, y);
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+	if (checkMouseOnImage()) {
+		is_image_drag = true;
+		drag_start_mouse = { ofGetMouseX(), ofGetMouseY() };
+		prev_cam_degree_xz = cam_degree_xz;
+		prev_cam_degree_y = cam_degree_y;
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+	is_image_drag = false;
 }
 
 //--------------------------------------------------------------
@@ -160,6 +167,20 @@ void ofApp::mouseEntered(int x, int y){
 //--------------------------------------------------------------
 void ofApp::mouseExited(int x, int y){
 
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseScrolled(int x, int y, float scroll_x, float scroll_y) {
+	if (checkMouseOnImage()) {
+		float coeff = 0.1f;
+
+		magnification += scroll_y * coeff;
+
+		if (magnification > 5)
+			magnification = 5;
+		if (magnification < 0.2)
+			magnification = 0.2;
+	}
 }
 
 //--------------------------------------------------------------
