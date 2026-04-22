@@ -29,12 +29,12 @@ void ofApp::setup() {
 void ofApp::update() {
 	statusUpdate();
 
-	if (generate_request && generate_status_changed) {
+	if (generate_request && frame_delayed) {
 		block_data->generateBlock();
 		draw_object = std::make_unique<drawObject>(block_data.get(), image_size, image_size);
 		blockCurrentInfoUpdate();
 		generate_request = false;
-		generate_status_changed = false;
+		frame_delayed = false;
 	}
 
 	if (draw_object) {
@@ -80,6 +80,9 @@ void ofApp::draw() {
 		drawStatus();
 		drawEtc();
 	}
+
+	frame_delayed
+		= true;
 }
 
 //--------------------------------------------------------------

@@ -84,7 +84,7 @@ class ofApp : public ofBaseApp{
 		float help_height;
 
 		bool generate_request = false;
-		bool generate_status_changed = false;
+		bool frame_delayed = false;
 
 		bool is_image_drag = false;
 		glm::vec2 drag_start_mouse;

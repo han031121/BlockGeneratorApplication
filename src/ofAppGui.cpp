@@ -230,8 +230,6 @@ void ofApp::drawStatus() {
 		}
 	}
 	font_status.drawString(s, rect_status_draw.x + margin, rect_status_draw.y + margin + font_status.getSize());
-
-	generate_status_changed = true;
 }
 
 //--------------------------------------------------------------
@@ -319,7 +317,7 @@ void ofApp::generateBlockClicked() {
 		draw_object.reset();
 
 	generate_request = true;
-	generate_status_changed = false;
+	frame_delayed = false;
 	block_data->status.setStatus(statusLevel::Info, "[ blockData ] Generating block...");
 }
 
